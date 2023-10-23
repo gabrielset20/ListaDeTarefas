@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "845355335710",
+    "project_id": "lista-de-tarefas-origin",
+    "storage_bucket": "lista-de-tarefas-origin.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:845355335710:android:86c92be39f6b1d5a912e0f",
+        "android_client_info": {
+          "package_name": "edu.ifam.listadetarefapdm"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBv4gDdbpFdIiO2LiUKP_hstowMykxqZeo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

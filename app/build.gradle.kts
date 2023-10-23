@@ -1,6 +1,7 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -53,9 +54,13 @@ android {
 }
 
 dependencies {
-
+    implementation("com.google.firebase:firebase-firestore-ktx:24.9.0")
     val nav_version = "2.5.3"
-    implementation("androidx.navigation:navigation-compose:$nav_version")
+    implementation("com.google.firebase:firebase-firestore-ktx")
+    implementation(platform("com.google.firebase:firebase-bom:32.4.0"))
+    implementation("com.google.firebase:firebase-common-ktx:20.4.2")
+    implementation ("androidx.constraintlayout:constraintlayout-compose:1.0.1")
+    implementation ("androidx.navigation:navigation-compose:$nav_version")
     implementation ("androidx.activity:activity-compose:1.3.1")
     implementation ("androidx.lifecycle:lifecycle-viewmodel-compose:2.4.0-alpha01")
     implementation ("androidx.compose.ui:ui:1.0.5")
