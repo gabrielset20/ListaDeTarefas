@@ -10,7 +10,9 @@ import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
@@ -18,6 +20,7 @@ import androidx.navigation.NavController
 import edu.ifam.listadetarefapdm.R
 import edu.ifam.listadetarefapdm.itemLista.TarefaItem
 import edu.ifam.listadetarefapdm.model.Tarefa
+import edu.ifam.listadetarefapdm.repositorio.TarefasRepositorio
 import edu.ifam.listadetarefapdm.ui.theme.Black
 import edu.ifam.listadetarefapdm.ui.theme.Purple700
 import edu.ifam.listadetarefapdm.ui.theme.White
@@ -30,6 +33,9 @@ fun ListaTarefas(
     navController: NavController
 
 ) {
+
+    val tarefasRepositorio = TarefasRepositorio()
+    val context = LocalContext.current
 
     Scaffold(
         topBar = {
@@ -56,29 +62,33 @@ fun ListaTarefas(
             }
         }
     ){
-        val listaTarefas: MutableList<Tarefa> = mutableListOf(
-            Tarefa(
-                tarefa = "Ir ao cinema",
-                descricao = "ahsuhuhauhsuhauhsua",
-                prioridade = 1
-            ),
+        val listaTarefas = tarefasRepositorio.recuperarTarefas().collectAsState(mutableListOf()).value
 
-            Tarefa(
-                tarefa = "Ir para o curso de natação",
-                descricao = "ahsuhuhauhsuhauhsua",
-                prioridade = 2
-            ),
+//        val listaTarefas: MutableList<Tarefa> = mutableListOf(
+//            Tarefa(
+//                tarefa = "Ir ao cinema",
+//                descricao = "ahsuhuhauhsuhauhsua",
+//                prioridade = 1
+//            ),
+//
+//            Tarefa(
+//                tarefa = "Ir para o curso de natação",
+//                descricao = "ahsuhuhauhsuhauhsua",
+//                prioridade = 2
+//            ),
+//
+//            Tarefa(
+//                tarefa = "Fazer a receita de pudim",
+//                descricao = "ahsuhuhauhsuhauhsua",
+//                prioridade = 3
+//            )
+//        )
 
-            Tarefa(
-                tarefa = "Fazer a receita de pudim",
-                descricao = "ahsuhuhauhsuhauhsua",
-                prioridade = 3
-            )
-        )
+
 
         LazyColumn{
-            itemsIndexed(listaTarefas){ position, _ ->
-                TarefaItem(position, listaTarefas)
+            itemsIndexed(listaTarefas){ position, _, ->
+                TarefaItem(position = position, listaTarefas = listaTarefas, context = context, navController = navController )
             }
         }
     }

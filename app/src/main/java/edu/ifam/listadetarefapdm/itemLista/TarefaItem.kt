@@ -1,6 +1,9 @@
 package edu.ifam.listadetarefapdm.itemLista
 
 
+import android.app.AlertDialog
+import android.content.Context
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -9,28 +12,63 @@ import androidx.compose.material.Card
 import androidx.compose.material.IconButton
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.navigation.NavController
 import edu.ifam.listadetarefapdm.R
 import edu.ifam.listadetarefapdm.model.Tarefa
+import edu.ifam.listadetarefapdm.repositorio.TarefasRepositorio
 import edu.ifam.listadetarefapdm.ui.theme.RADIO_BUTTON_GREEN_SELECTED
 import edu.ifam.listadetarefapdm.ui.theme.RADIO_BUTTON_RED_SELECTED
 import edu.ifam.listadetarefapdm.ui.theme.RADIO_BUTTON_YELLOW_SELECTED
 import edu.ifam.listadetarefapdm.ui.theme.ShapeCardPrioridade
 import edu.ifam.listadetarefapdm.ui.theme.White
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 @Composable
 fun TarefaItem(
     position: Int,
-    listaTarefas: MutableList<Tarefa>
+    listaTarefas: MutableList<Tarefa>,
+    context: Context,
+    navController: NavController
+
+
 ) {
     val tituloTarefa = listaTarefas[position].tarefa
     val descricaoTarefa = listaTarefas[position].descricao
     val prioridade = listaTarefas[position].prioridade
+
+    val scope = rememberCoroutineScope()
+    val tarefasRepositorio = TarefasRepositorio()
+
+    fun dialogDeletar(){
+        val alertDialog = AlertDialog.Builder(context)
+        alertDialog.setTitle("Deletar tarefa")
+            .setMessage("Deseja Excluir a tarefa?")
+            .setPositiveButton("Sim"){_, _ ->
+                
+                tarefasRepositorio.deletarTarefa(tituloTarefa.toString())
+                
+                scope.launch(Dispatchers.Main){
+                    listaTarefas.removeAt(position)
+                    navController.navigate("listaTarefas")
+                    Toast.makeText(context, "Sucesso ao deletar tarefa", Toast.LENGTH_SHORT).show()
+
+                }
+            }
+            .setNegativeButton("Não"){_, _ ->
+
+            }
+            .show()
+    }
+
+
     var nivelDePrioridade: String = when (prioridade) {
         0 -> {
             "Sem prioridade"
@@ -67,7 +105,9 @@ fun TarefaItem(
     }
     Card(
         backgroundColor = White,
-        modifier = Modifier.fillMaxWidth().padding(10.dp)
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(10.dp)
     ) {
         ConstraintLayout(
             modifier = Modifier.padding(20.dp)
@@ -101,11 +141,13 @@ fun TarefaItem(
 
             Card(
                 backgroundColor = color,
-                modifier = Modifier.size(30.dp).constrainAs(cardPrioridade) {
-                    top.linkTo(txtDescricao.bottom, margin = 10.dp)
-                    start.linkTo(txtPrioridade.end, margin = 10.dp)
-                    bottom.linkTo(parent.bottom, margin = 10.dp)
-                },
+                modifier = Modifier
+                    .size(30.dp)
+                    .constrainAs(cardPrioridade) {
+                        top.linkTo(txtDescricao.bottom, margin = 10.dp)
+                        start.linkTo(txtPrioridade.end, margin = 10.dp)
+                        bottom.linkTo(parent.bottom, margin = 10.dp)
+                    },
 
                 shape = ShapeCardPrioridade.large
             ) {
@@ -115,6 +157,7 @@ fun TarefaItem(
 
             IconButton(
                 onClick = {
+                          dialogDeletar()
 
                 },
                 modifier = Modifier.constrainAs(btDeletor) {
